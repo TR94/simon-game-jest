@@ -3,7 +3,7 @@
  */
 
 const { createSecureContext } = require("tls");
-const {game, newGame, showScore, addTurn, lightsOn} = require("../game")
+const {game, newGame, showScore, addTurn, lightsOn, showTurns} = require("../game")
 
 beforeAll(() => {
     let fs = require("fs");
@@ -28,6 +28,10 @@ describe("game object contains correct key", () => {
 
     test("choices key exists", () => {
         expect("choices" in game).toBe(true);
+    });
+
+    test("turn number key exists", () => {
+        expect("turnNumber" in game).toBe(true);
     });
 
     test("choices contains correct IDs", () => {
@@ -58,6 +62,13 @@ describe("newGame works correctly", () => {
     test("should display 0 for element with ID score", () => {
         expect(document.getElementById("score").innerText).toEqual(0);
     });
+
+    test("check the data listener attribute on circle is true", () => {
+        const elements = document.getElementsByClassName("circle");
+        for (let element of elements) {
+            expect(element.getAttribute("data-listener")).toEqual("true");
+        };
+    });
 });
 
 describe("game play works correctly", () => {
@@ -83,5 +94,11 @@ describe("game play works correctly", () => {
         let button = document.getElementById(game.currentGame[0]);
         lightsOn(game.currentGame[0]);
         expect(button.classList).toContain("light");
+    });
+
+    test("show turns should update game turn number", () => {
+        game.turnNumber = 42;
+        showTurns();
+        expect(game.turnNumber).toBe(0);
     });
 }); 
